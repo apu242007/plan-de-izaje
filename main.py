@@ -42,18 +42,48 @@ class PlanDeIzajeApp(tk.Tk):
         self.pdf_button = tk.Button(self, text="Descargar PDF", command=self.download_pdf)
         self.pdf_button.grid(row=5, column=1)
 
-    def calculate(self):
-        # Lógica de cálculo
-        try:
-            radio_inicial = float(self.radio_inicial.get())
-            longitud_inicial = float(self.longitud_inicial.get())
-            capacidad_inicial = float(self.capacidad_inicial.get())
-            # Aquí iría la lógica de cálculo y validación
-            resultado = f"Radio inicial: {radio_inicial}\nLongitud inicial: {longitud_inicial}\nCapacidad inicial: {capacidad_inicial}"
-            self.result_text.delete(1.0, tk.END)
-            self.result_text.insert(tk.END, resultado)
-        except ValueError:
-            messagebox.showerror("Error", "Por favor, ingrese valores numéricos válidos.")
+def calculate(self):
+    try:
+        radio_inicial = float(self.radio_inicial.get())
+        longitud_inicial = float(self.longitud_inicial.get())
+        capacidad_inicial = float(self.capacidad_inicial.get())
+
+        peso_gancho = float(self.peso_gancho.get())
+        peso_herramienta = float(self.peso_herramienta.get())
+        peso_carga = float(self.peso_carga.get())
+        otros_pesos = float(self.otros_pesos.get())
+
+        carga_bruta = peso_gancho + peso_herramienta + peso_carga + otros_pesos
+        capacidad_bruta_menor = min(self.obtener_capacidad_por_radio(radio_inicial))
+
+        self.result_text.delete(1.0, tk.END)
+        self.result_text.insert(tk.END, f"Carga Bruta: {carga_bruta} kg\n")
+        self.result_text.insert(tk.END, f"Capacidad Bruta Menor: {capacidad_bruta_menor} kg\n")
+
+        if carga_bruta > capacidad_bruta_menor:
+            messagebox.showwarning("Advertencia", "La carga bruta excede la capacidad de la grúa. No se puede realizar el izaje.")
+        else:
+            messagebox.showinfo("Información", "El izaje es seguro.")
+    except ValueError:
+        messagebox.showerror("Error", "Por favor, ingrese valores numéricos válidos.")
+
+def obtener_capacidad_por_radio(self, radio):
+    # Aquí deberías implementar la lógica para obtener la capacidad según el radio y la tabla proporcionada
+    # Este es un ejemplo simplificado:
+    capacidad_por_radio = {
+        3: 30000,
+        3.5: 25650,
+        4: 22775,
+        4.5: 19850,
+        5: 17875,
+        6: 14250,
+        7: 11500,
+        8: 10300,
+        9: 8750,
+        10: 7530
+    }
+    return capacidad_por_radio.get(radio, 0)
+
 
     def send_email(self):
         # Lógica para enviar email
