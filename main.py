@@ -90,8 +90,8 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
 def send_email(self):
-    sender_email = "tu_email@gmail.com"
-    receiver_email = "destinatario_email@gmail.com"
+    sender_email = "jorgecinco22@gmail.com"
+    receiver_email = "jorge_e_castro@hotmail.com"
     password = "tu_contraseña"
 
     subject = "Plan de Izaje"
