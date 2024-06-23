@@ -84,10 +84,42 @@ def obtener_capacidad_por_radio(self, radio):
     }
     return capacidad_por_radio.get(radio, 0)
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 
-    def send_email(self):
-        # Lógica para enviar email
-        pass
+def send_email(self):
+    sender_email = "tu_email@gmail.com"
+    receiver_email = "destinatario_email@gmail.com"
+    password = "tu_contraseña"
+
+    subject = "Plan de Izaje"
+    body = "Adjunto encontrará el plan de izaje en formato PDF."
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    pdfname = "plan_de_izaje.pdf"
+    with open(pdfname, "rb") as pdf:
+        part = MIMEApplication(pdf.read(), Name=pdfname)
+    part['Content-Disposition'] = f'attachment; filename="{pdfname}"'
+    msg.attach(part)
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, password)
+        text = msg.as_string()
+        server.sendmail(sender_email, receiver_email, text)
+        server.quit()
+        messagebox.showinfo("Información", "Correo enviado exitosamente.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo enviar el correo. Error: {str(e)}")
 
     def download_pdf(self):
         # Lógica para descargar PDF
